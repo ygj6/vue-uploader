@@ -57,23 +57,21 @@ app.mount('#app')
 
 ``` vue
 <template>
-  <uploader :options="options" class="uploader-example">
-    <uploader-unsupport></uploader-unsupport>
-    <uploader-drop>
-      <p>Drop files here to upload or</p>
-      <uploader-btn>select files</uploader-btn>
-      <uploader-btn :attrs="attrs">select images</uploader-btn>
-      <uploader-btn :directory="true">select folder</uploader-btn>
-    </uploader-drop>
-    <uploader-list></uploader-list>
-  </uploader>
+  <uploader
+    :options="options"
+    :file-status-text="statusText"
+    class="uploader-example"
+    ref="uploaderRef"
+    @file-complete="fileComplete"
+    @complete="complete"
+  ></uploader>
 </template>
 
 <script>
   import { nextTick, ref, onMounted } from 'vue'
   export default {
     setup () {
-      const uploader = ref(null)
+      const uploaderRef = ref(null)
       const options = {
         target: '//localhost:3000/upload', // '//jsonplaceholder.typicode.com/posts/',
         testChunks: false
@@ -88,19 +86,19 @@ app.mount('#app')
         paused: '暂停中',
         waiting: '等待中'
       }
-      const complete = () => {
+      const complete = function () {
         console.log('complete', arguments)
       }
-      const fileComplete = () => {
+      const fileComplete = function () {
         console.log('file complete', arguments)
       }
       onMounted(() => {
         nextTick(() => {
-          window.uploader = uploader.value.uploader
+          window.uploader = uploaderRef.value.uploader
         })
       })
       return {
-        uploader,
+        uploaderRef,
         options,
         attrs,
         statusText,
